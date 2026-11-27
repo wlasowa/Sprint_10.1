@@ -2,20 +2,9 @@ import allure
 import pytest
 
 import data
+from params import taxi_tariff_cases
 
-TAXI_TARIFF_CASES = []
-
-for name, description in data.TAXI_TARIFFS:
-    marks = []
-    if name in data.BUGGY_TARIFFS:
-        marks.append(
-            pytest.mark.xfail(
-                reason="Описание тарифа в подсказке не соответствует ТЗ"
-            )
-        )
-    TAXI_TARIFF_CASES.append(
-        pytest.param(name, description, id=data.TARIFF_IDS[name], marks=marks)
-    )
+TAXI_TARIFF_CASES = taxi_tariff_cases()
 
 
 class TestTaxiOrder:

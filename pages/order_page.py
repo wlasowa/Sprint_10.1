@@ -1,7 +1,6 @@
 import allure
-from selenium.webdriver.support.wait import WebDriverWait
 
-from locators import order_page_locators as loc
+from locators.order_page_locators import OrderPageLocators as loc
 from pages.base_page import BasePage
 
 
@@ -46,16 +45,8 @@ class OrderPage(BasePage):
 
     @allure.step("Дожидаемся появления окна «Поиск машины»")
     def wait_for_search_started(self, timeout=15):
-        WebDriverWait(self.driver, timeout).until(
-            lambda d: d.find_element(*loc.ORDER_HEADER_TITLE)
-            .get_attribute("innerText")
-            .strip()
-            == "Поиск машины"
-        )
+        self.wait_text_equals(loc.ORDER_HEADER_TITLE, "Поиск машины", timeout)
 
     @allure.step("Дожидаемся окончания поиска машины")
     def wait_for_driver_arrival(self, timeout=40):
-        WebDriverWait(self.driver, timeout).until(
-            lambda d: "приедет"
-            in d.find_element(*loc.ORDER_HEADER_TITLE).get_attribute("innerText")
-        )
+        self.wait_text_contains(loc.ORDER_HEADER_TITLE, "приедет", timeout)

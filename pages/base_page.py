@@ -36,6 +36,28 @@ class BasePage:
             ec.presence_of_element_located(locator)
         )
 
+    def wait_text_equals(self, locator, text, timeout=None):
+        WebDriverWait(self.driver, timeout or self.TIMEOUT).until(
+            lambda d: d.find_element(*locator).get_attribute("innerText").strip()
+            == text
+        )
+
+    def wait_text_contains(self, locator, text, timeout=None):
+        WebDriverWait(self.driver, timeout or self.TIMEOUT).until(
+            lambda d: text in d.find_element(*locator).get_attribute("innerText")
+        )
+
+    def wait_text_changed(self, locator, previous_text, timeout=None):
+        WebDriverWait(self.driver, timeout or self.TIMEOUT).until(
+            lambda d: d.find_element(*locator).get_attribute("innerText")
+            != previous_text
+        )
+
+    def wait_count_at_least(self, locator, count, timeout=None):
+        WebDriverWait(self.driver, timeout or self.TIMEOUT).until(
+            lambda d: len(d.find_elements(*locator)) >= count
+        )
+
     def is_element_displayed(self, locator):
         elements = self.driver.find_elements(*locator)
         return bool(elements) and elements[0].is_displayed()

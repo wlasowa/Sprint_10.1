@@ -4,6 +4,11 @@ TO_ADDRESS = "Зубовский бульвар, 37"
 SAME_ADDRESS_AUTO_FREE = "Авто Бесплатно"
 SAME_ADDRESS_DURATION = "В пути 0 мин."
 
+ADDRESS_PAIRS = [
+    (FROM_ADDRESS, TO_ADDRESS),
+    (TO_ADDRESS, FROM_ADDRESS),
+]
+
 TAXI_TARIFFS = [
     ("Рабочий", "Для деловых особ, которых отвлекают"),
     ("Сонный", "Для тех, кто не выспался"),

@@ -1,9 +1,8 @@
 import allure
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.wait import WebDriverWait
 
 import data
-from locators import main_page_locators as loc
+from locators.main_page_locators import MainPageLocators as loc
 from pages.base_page import BasePage
 
 
@@ -27,19 +26,16 @@ class MainPage(BasePage):
     @allure.step("Строим маршрут по умолчанию")
     def enter_default_route(self):
         self.enter_route(data.FROM_ADDRESS, data.TO_ADDRESS)
-        return self
 
     @allure.step("Строим маршрут с одинаковыми адресами")
     def enter_same_address_route(self):
         self.enter_route(data.FROM_ADDRESS, data.FROM_ADDRESS)
-        return self
 
     @allure.step("Открываем форму заказа такси")
     def open_taxi_form(self):
         self.enter_default_route()
         self.click_mode("Быстрый")
         self.click_action_button()
-        return self
 
     @allure.step("Выбираем вид маршрута «{mode}»")
     def click_mode(self, mode):
@@ -94,18 +90,12 @@ class MainPage(BasePage):
 
     @allure.step("Дожидаемся появления кнопки «{text}»")
     def wait_action_button_text(self, text, timeout=15):
-        WebDriverWait(self.driver, timeout).until(
-            lambda d: text
-            in d.find_element(*loc.ACTION_BUTTON).get_attribute("innerText")
-        )
+        self.wait_text_contains(loc.ACTION_BUTTON, text, timeout)
         return self.get_action_button_text()
 
     @allure.step("Дожидаемся пересчёта результата маршрута")
     def wait_results_text_changed(self, previous_text, timeout=15):
-        WebDriverWait(self.driver, timeout).until(
-            lambda d: d.find_element(*loc.RESULTS_TEXT).get_attribute("innerText")
-            != previous_text
-        )
+        self.wait_text_changed(loc.RESULTS_TEXT, previous_text, timeout)
 
     @allure.step("Получаем описание тарифа из всплывающего окна")
     def get_tooltip_description(self):
@@ -137,7 +127,5 @@ class MainPage(BasePage):
 
     @allure.step("Дожидаемся появления {expected} точек на карте")
     def wait_for_placemarks(self, expected, timeout=20):
-        WebDriverWait(self.driver, timeout).until(
-            lambda d: len(d.find_elements(*loc.MAP_PLACEMARKS)) >= expected
-        )
+        self.wait_count_at_least(loc.MAP_PLACEMARKS, expected, timeout)
         return len(self.find_elements(loc.MAP_PLACEMARKS))
